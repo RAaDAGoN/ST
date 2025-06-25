@@ -36,8 +36,8 @@ public class Main {
                 break;
             case 6:
                 System.out.print("Число = ");
-                int с = sc.nextInt();
-                System.out.printf("Число %s %s простым", с, isSimple(с) ? "является" : "не является");
+                int simple = sc.nextInt();
+                System.out.printf("Число %s %s простым", simple, isSimple(simple) ? "является" : "не является");
                 break;
             case 7:
                 System.out.print("Введите n чисел Фибоначчи(2 < n < 100):");
@@ -162,6 +162,6 @@ public class Main {
             } else i++;
         }
 
-        System.out.println(roman.toString());
+        System.out.println(roman);
     }
 }
