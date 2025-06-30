@@ -1,50 +1,28 @@
 package ru.st;
 
+import ru.st.commands.*;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ShellInvoker {
-//    private Command date;
-//    private Command time;
-//    private Command pwd;
-//    private Command help;
-//
-//    public ShellInvoker(Command date, Command time, Command pwd, Command help) {
-//        this.date = date;
-//        this.time = time;
-//        this.pwd = pwd;
-//        this.help = help;
-//    }
-//
-//    public void dateNow(){
-//        date.execute();
-//    }
-//
-//    public void timeNow(){
-//        time.execute();
-//    }
-//
-//    public void currentPwd(){
-//        pwd.execute();
-//    }
-//
-//    public void help(){
-//        help.execute();
-//    }
-    private final List<CommandEntry> commands;
+    private Map<String, Command> commands = new HashMap<>();
 
-    public ShellInvoker(List<CommandEntry> commands) {
-        this.commands = commands;
+    public void registerCommand(Command command){
+        commands.put(command.getName(), command);
     }
 
-    public void executeCommand(String commandName){
-        for (CommandEntry x : commands){
-            if (x.getName().equals(commandName)){
-                x.getCommand().execute();
-                return;
-            }
-        }
-        System.out.printf("Ошибка: неизвестная команда '%s'\n", commandName);
+    public void executeCommand(String name){
+        Command command = commands.get(name);
+        if (command != null){
+            command.execute();
+        } else System.out.printf("Ошибка: неизвестная команда '%s'", name);
+    }
+
+    // for HelpCommand
+    public Iterable<Command> getAllCommands(){
+        return commands.values();
     }
 }

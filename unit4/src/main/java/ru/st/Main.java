@@ -1,19 +1,21 @@
 package ru.st;
 
+import ru.st.commands.*;
+
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         CommandReceiver receiver = new CommandReceiver(); // receiver
 
-        List<CommandEntry> commands = new ArrayList<>();
-        commands.add(new CommandEntry("date", new DateCommand(receiver)));
-        commands.add(new CommandEntry("time", new TimeCommand(receiver)));
-        commands.add(new CommandEntry("pwd", new PwdCommand(receiver)));
-        commands.add(new CommandEntry("exit", new ExitCommand(receiver)));
-        commands.add(new CommandEntry("help", new HelpCommand(receiver)));
+        ShellInvoker invoker = new ShellInvoker();
 
-        ShellInvoker invoker = new ShellInvoker(commands);
+        invoker.registerCommand(new DateCommand(receiver));
+        invoker.registerCommand(new TimeCommand(receiver));
+        invoker.registerCommand(new PwdCommand(receiver));
+        invoker.registerCommand(new ExitCommand(receiver));
+        invoker.registerCommand(new HelpCommand(invoker));
+
         Scanner scanner = new Scanner(System.in);
 
         while (true){

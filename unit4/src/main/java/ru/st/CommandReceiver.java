@@ -6,27 +6,21 @@ import java.util.Date;
 
 // receiver
 public class CommandReceiver {
-    void date(){
+    public void date(){
         System.out.println(LocalDate.now());
     }
 
-    void time(){
+    public void time(){
         Date current = new Date();
         System.out.printf("%s:%s:%s\n", current.getHours(), current.getMinutes(), current.getSeconds());
     }
 
-    void pwd(){
+    public void pwd(){
         System.out.println(System.getProperty("user.dir"));
     }
-    void exit(){
+    public void exit(){
         System.exit(0);
     }
 
-    void help(){
-        System.out.println("date - выводит текущую дату \n" +
-                "time - выводит текущее время \n" +
-                "pwd - выводит текущий рабочий каталог \n" +
-                "exit - завершает работу приложения \n" +
-                "help - выводит список доступных команд");
-    }
+
 }
