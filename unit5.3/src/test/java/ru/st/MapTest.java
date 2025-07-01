@@ -29,5 +29,7 @@ public class MapTest {
         Assert.assertEquals(swaped.get("1(один)"), 1);
         Assert.assertEquals(swaped.get("2(два)"), 2);
         Assert.assertEquals(swaped.get("3(три)"), 3);
+        // проверка на количество элементов в мапе
+        Assert.assertEquals(swaped.size(), 3);
     }
 }

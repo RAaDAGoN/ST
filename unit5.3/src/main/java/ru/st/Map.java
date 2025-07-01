@@ -8,7 +8,6 @@ public class Map {
         for (java.util.Map.Entry<K, V> entry : map.entrySet()){
             s.put(entry.getValue(), entry.getKey());
         }
-
         return s;
     }
 }
