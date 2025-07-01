@@ -8,38 +8,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileReaderService {
+    /*
+    Интерфейс для обработки строк по одной
+    void readLines - читает файл построчно и для каждой строки вызывает переданный обработчик
+     */
+    @FunctionalInterface
+    public interface LineProcessor {
+        void processLine(String line);
+    }
 
-    public List<String> readLines(String resourceName) {
-        List<String> lines = new ArrayList<String>();
+    public void readLines(String resourceName, LineProcessor processor) {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourceName);
 
         if (inputStream == null) {
             System.out.println("Файл не найден в ресурсах: " + resourceName);
-            return lines;
+            return;
         }
 
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                lines.add(line);
+                processor.processLine(line);
             }
-
         } catch (IOException e) {
             System.out.println("Ошибка чтения ресурса: " + e.getMessage());
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ignore) {
-                }
-            }
         }
-
-        return lines;
     }
 }
 

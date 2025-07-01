@@ -6,15 +6,14 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        String resourceName = "1.txt";
-//
 //        FileReaderService fileReader = new FileReaderService();
-//        List<String> lines = fileReader.readLines(resourceName);
-//
 //        WordCounter wordCounter = new WordCounter();
-//        wordCounter.processLines(lines);
-//
 //        WordFrequencyPrinter printer = new WordFrequencyPrinter();
-//        printer.print(wordCounter.getWordFrequencies());
+//
+//        fileReader.readLines("1.txt", wordCounter::processLine);
+//
+//        Map<String, Integer> frequencies = wordCounter.getWordFrequencies();
+//
+//        printer.print(frequencies);
     }
 }
