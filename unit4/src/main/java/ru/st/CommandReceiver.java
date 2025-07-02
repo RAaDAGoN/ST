@@ -21,6 +21,4 @@ public class CommandReceiver {
     public void exit(){
         System.exit(0);
     }
-
-
 }

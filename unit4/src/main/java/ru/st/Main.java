@@ -6,8 +6,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        CommandReceiver receiver = new CommandReceiver(); // receiver
-
+        CommandReceiver receiver = new CommandReceiver();
         ShellInvoker invoker = new ShellInvoker();
 
         invoker.registerCommand(new DateCommand(receiver));
