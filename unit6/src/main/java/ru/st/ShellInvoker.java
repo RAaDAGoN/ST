@@ -28,17 +28,14 @@ public class ShellInvoker {
         // 1. Пробуем конструктор с ShellInvoker
         try {
             return clazz.getDeclaredConstructor(ShellInvoker.class).newInstance(this);
-        } catch (NoSuchMethodException ignored) {}
+        } catch (Exception e) {}
 
         // 2. Пробуем конструктор без параметров
         try {
             return clazz.getDeclaredConstructor().newInstance();
-        } catch (NoSuchMethodException ignored) {}
+        } catch (Exception e) {}
 
-        throw new RuntimeException("Нет подходящего конструктора для " + clazz.getSimpleName() +
-                ". Доступные варианты:\n" +
-                "1. " + clazz.getSimpleName() + "(ShellInvoker)\n" +
-                "2. " + clazz.getSimpleName() + "()");
+        throw new RuntimeException("Нет подходящего конструктора для " + clazz.getSimpleName());
     }
 
     public void executeCommand(String input) {
@@ -59,10 +56,7 @@ public class ShellInvoker {
         try {
             command.execute(args);
         } catch (CommandExecutionException e) {
-            System.err.println("Ошибка выполнения команды '" + e.getCommandName() + "': " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Неожиданная ошибка при выполнении команды: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Ошибка выполнения команды '" + e.getCommandName() + "': " + e.getMessage());
         }
     }
 
