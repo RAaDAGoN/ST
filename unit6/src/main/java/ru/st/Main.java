@@ -2,7 +2,9 @@ package ru.st;
 
 import ru.st.commands.*;
 
-import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  для дальнейшей регистрации новой команды необходимо:
@@ -14,22 +16,51 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        ShellInvoker invoker = new ShellInvoker();
+        try {
+            ShellInvoker invoker = new ShellInvoker();
 
-        invoker.registerCommand(ru.st.commands.DateCommand.class);
-        invoker.registerCommand(ru.st.commands.TimeCommand.class);
-        invoker.registerCommand(ru.st.commands.PwdCommand.class);
-        invoker.registerCommand(ru.st.commands.CdCommand.class);
-        invoker.registerCommand(ru.st.commands.LsCommand.class);
-        invoker.registerCommand(ru.st.commands.ExitCommand.class);
-        invoker.registerCommand(ru.st.commands.HelpCommand.class);
+            String packageName = "ru.st.commands";
+            String packagePath = packageName.replace('.', '/');
+            File directory = new File(Objects.requireNonNull(
+                    Main.class.getClassLoader().getResource(packagePath)).getFile());
 
-        Scanner scanner = new Scanner(System.in);
+            List<Class> commandClasses = findClasses(directory, packageName);
+            for (Class clazz : commandClasses) {
+                if (clazz.isAnnotationPresent(CommandInfo.class)) {
+                    invoker.registerCommand(clazz);
+                }
+            }
 
-        while (true){
-            System.out.print("> ");
-            String input = scanner.nextLine().trim();
-            invoker.executeCommand(input);
+            Scanner scanner = new Scanner(System.in);
+
+            while (true){
+                System.out.print("> ");
+                String input = scanner.nextLine().trim();
+                invoker.executeCommand(input);
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
+
+    }
+
+    private static List<Class> findClasses(File directory, String packageName)
+        throws ClassNotFoundException{
+        List<Class> classes = new ArrayList<Class>();
+        if (!directory.exists()){
+            return classes;
+        }
+
+        File[] files = directory.listFiles();
+        for (File file : files){
+            if (file.isDirectory()){
+                assert !file.getName().contains(".");
+                classes.addAll(findClasses(file, packageName + "." + file.getName()));
+            } else if (file.getName().endsWith(".class")) {
+                classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+            }
+        }
+
+        return classes;
     }
 }

@@ -3,21 +3,23 @@ package ru.st.commands;
 import ru.st.Command;
 import ru.st.CommandExecutionException;
 import ru.st.CommandInfo;
-import ru.st.CommandReceiver;
+
+import java.io.File;
 
 @CommandInfo(name = "cd", Description = "Смена текущей рабочей директории")
 public class CdCommand implements Command {
-    private CommandReceiver receiver;
-
-    public CdCommand(CommandReceiver receiver) {
-        this.receiver = receiver;
-    }
+    private String currentDirectory = System.getProperty("user.dir");
 
     @Override
     public void execute(String[] args) throws CommandExecutionException {
         if (args.length == 0) {
             throw new CommandExecutionException("cd", "Не указан путь", null);
         }
-        receiver.cd(args[0]);
+        File newDir = new File(args[0]);
+        if (newDir.exists() && newDir.isDirectory()){
+            currentDirectory = newDir.getAbsolutePath();
+        } else {
+            throw new CommandExecutionException("cd", "Директория не найдена: " + args[0], null);
+        }
     }
 }
