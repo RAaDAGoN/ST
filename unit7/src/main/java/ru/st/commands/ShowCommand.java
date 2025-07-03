@@ -1,20 +1,27 @@
 package ru.st.commands;
 
-import ru.st.Command;
-import ru.st.CommandExecutionException;
-import ru.st.CommandInfo;
-import ru.st.CommandReceiver;
+import ru.st.*;
+
+import java.sql.ResultSet;
 
 @CommandInfo(name = "show", description = "данная команда показывает все текущие задачи")
 public class ShowCommand implements Command {
-    private CommandReceiver receiver;
-
-    public ShowCommand(CommandReceiver receiver) {
-        this.receiver = receiver;
-    }
-
     @Override
     public void execute(String[] args) throws CommandExecutionException {
-        receiver.show();
+        String sql = "SELECT * FROM task";
+
+        try (var stmt = Database.getConnection().createStatement();
+             ResultSet resultSet = stmt.executeQuery(sql)){
+            System.out.println("Список задач");
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String task = resultSet.getString("name");
+                boolean status = resultSet.getBoolean("status");
+                System.out.printf("%s %s %s\n", id, task, status);
+            }
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

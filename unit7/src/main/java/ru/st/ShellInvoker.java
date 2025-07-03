@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class ShellInvoker {
     private final Map<String, ru.st.Command> commands = new HashMap<>();
-    private final CommandReceiver receiver = new CommandReceiver(); // for help
 
     public void registerCommand(Class<? extends ru.st.Command> clazz){
         if (!clazz.isAnnotationPresent(CommandInfo.class)){
@@ -26,15 +25,12 @@ public class ShellInvoker {
     private ru.st.Command instanceCommand(Class<? extends ru.st.Command> clazz) throws Exception{
         try {
             return clazz.getDeclaredConstructor(ShellInvoker.class).newInstance(this);
-        } catch (NoSuchMethodException e){
-            System.out.println(e.getMessage());
-        }
+        } catch (NoSuchMethodException e){}
 
         try {
-            return clazz.getDeclaredConstructor(CommandReceiver.class).newInstance(receiver);
-        } catch (NoSuchMethodException e){
-            System.out.println(e.getMessage());
-        }
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException e){}
+
 
         throw new RuntimeException("Нет подходящего конструктора для " + clazz.getSimpleName());
     }
@@ -58,7 +54,12 @@ public class ShellInvoker {
         }
     }
 
-    public void printHelp(){
-
+    // for 'helpCommand'
+    public void printHelp() {
+        System.out.println("Доступные команды:");
+        commands.forEach((name, cmd) -> {
+            CommandInfo info = cmd.getClass().getAnnotation(CommandInfo.class);
+            System.out.printf("%-10s - %s%n", name, info.description());
+        });
     }
 }
